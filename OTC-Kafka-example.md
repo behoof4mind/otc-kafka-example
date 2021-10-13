@@ -1,6 +1,5 @@
-###  Table of Contents  
+##  How to start with Apache Kafka
 
-[Table of Contents](#table-of-content)  
 [Description](#description)  
 [Requiremens](#requirements)  
 [Option A. Plain Kubernetes manifests](#option-a)  
@@ -44,7 +43,7 @@ Files mentioned here can be found here https://github.com/iits-consulting/otc-ka
 -   Kafkacat (optional)
 
 
-### Option A. Plain Kubernetes manifests  <a name="option-a"></a>
+## Option A. Plain Kubernetes manifests  <a name="option-a"></a>
 
 ### Benefits and Cautions
 
