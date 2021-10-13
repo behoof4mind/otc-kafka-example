@@ -212,7 +212,7 @@ Apply changes by `kubectl apply -f kafka-service.yml`
   ```shell
   kcat -b localhost:9092 -t test-topic -C
   ```
-##  Option B. Official Kafka Helm chart <aname="option-b"></a>
+##  Option B. Official Kafka Helm chart <a name="option-b"></a>
 
 #### Benefits and Cautions
 
