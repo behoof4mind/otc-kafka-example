@@ -1,44 +1,25 @@
-pagestyle: empty
 ##  Table of Contents
 
 
-[Table of Contents](#table-of-content)
-
-[Description](#description)
-
-[Requiremens](#requirements)
-
-[Option A. Plain Kubernetes manifests](#option-a.-plain-kubernetes-manifests)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Create Zookeeper](#create-zookeeper)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Expose Zookeeper service](#expose-zookeeper-service)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Create Broker](#create-broker)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Expose Broker service](#expose-broker-service)
-
-[Option B. Official Kafka Helm chart](#option-b.-official-kafka-helm-chart)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-1)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Setup by Helm](#setup-by-helm)
-
-[Option C. Strimzi Kafka Operator](#option-c.-strimzi-kafka-operator)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-2)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Applying Strimzi installation files](#applying-strimzi-installation-files)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Provision Apache Kafka cluster](#provision-apache-kafka-cluster)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Wait for pods starts](#wait-for-pods-starts)
-
-&nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-and-receive-messages)
-
-[Conclusion](#conclusion)
+[Table of Contents](#table-of-content)  
+[Description](#description)  
+[Requiremens](#requirements)  
+[Option A. Plain Kubernetes manifests](#option-a.-plain-kubernetes-manifests)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Create Zookeeper](#create-zookeeper)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Expose Zookeeper service](#expose-zookeeper-service)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Create Broker](#create-broker)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Expose Broker service](#expose-broker-service)  
+[Option B. Official Kafka Helm chart](#option-b.-official-kafka-helm-chart)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-1)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Setup by Helm](#setup-by-helm)  
+[Option C. Strimzi Kafka Operator](#option-c.-strimzi-kafka-operator)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Applying Strimzi installation files](#applying-strimzi-installation-files)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Provision Apache Kafka cluster](#provision-apache-kafka-cluster)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Wait for pods starts](#wait-for-pods-starts)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-and-receive-messages)  
+[Conclusion](#conclusion)  
 
 ##  Description
 
