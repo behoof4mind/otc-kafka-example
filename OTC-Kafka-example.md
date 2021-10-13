@@ -1,4 +1,4 @@
-##  Table of Contents  
+###  Table of Contents  
 
 [Table of Contents](#table-of-content)  
 [Description](#description)  
@@ -20,7 +20,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-and-receive-messages)  
 [Conclusion](#conclusion)  
 
-##  Description
+###  Description
 
 This is step-by-step guide, which will help you to start with Apache
 Kafka in OTC Cloud Container Engine. There are 3 different options
@@ -36,16 +36,17 @@ Files mentioned here can be found here https://github.com/iits-consulting/otc-ka
 > setup and configuration must be done by persons who have enough
 > experience in Cloud Technologies and Kafka platform.**
 
-## Requirements
+### Requirements
 
 -   OTC CCE cluster
 -   Kubectl configured for your Kubernetes cluster context properly
 -   Helm package manager (for options B and C)
 -   Kafkacat (optional)
 
-## Option A. Plain Kubernetes manifests  <a name="option-a"></a>
 
-#### Benefits and Cautions
+### Option A. Plain Kubernetes manifests  <a name="option-a"></a>
+
+### Benefits and Cautions
 
 This option should be used for **testing** purposes. No additional tools
 and pre-configuration steps needed. You are using plain Kubernetes
@@ -58,55 +59,53 @@ versioning and templating. If you need to apply these manifests in
 different environments with different configuration – you should
 duplicate your code below.
 
-#### Create Namespace
 
-```shell
-kubectl create ns kafka
-```
-
-#### Create Zookeeper
-
-- Save snippet below to `zookeeper-statefullset.yml` file:
-  ```yml
-  apiVersion: apps/v1
-  kind: StatefulSet
-  metadata:
-    name: zookeeper
-  spec:
-    selector:
-      matchLabels:
-        app: zookeeper
-    serviceName: zookeeper
-    replicas: 1
-    template:
-      metadata:
-        labels:
+### Create Zookeeper
+  - Create namespace
+    ```shell
+    kubectl create ns kafka
+    ```
+  - Save snippet below to `zookeeper-statefullset.yml` file:
+    ```yml
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: zookeeper
+    spec:
+      selector:
+        matchLabels:
           app: zookeeper
-      spec:
-        containers:
-        - name: zoo1
-          image: zookeeper
-          imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-              cpu: 128m
-              memory: 500Mi
-            limits:
-              cpu: 128m
-              memory: 500Mi
-          ports:
-          - containerPort: 2181
-          env:
-          - name: ZK_SERVER_HEAP
-            value: "256"
-          - name: ZOOKEEPER_ID
-            value: "1"
-          - name: ZOOKEEPER_SERVER_1
-            value: zoo1
-  ```
-- Apply changes by `kubectl apply -f zookeeper-statefullset.yml`
+      serviceName: zookeeper
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: zookeeper
+        spec:
+          containers:
+          - name: zoo1
+            image: zookeeper
+            imagePullPolicy: IfNotPresent
+            resources:
+              requests:
+                cpu: 128m
+                memory: 500Mi
+              limits:
+                cpu: 128m
+                memory: 500Mi
+            ports:
+            - containerPort: 2181
+            env:
+            - name: ZK_SERVER_HEAP
+              value: "256"
+            - name: ZOOKEEPER_ID
+              value: "1"
+            - name: ZOOKEEPER_SERVER_1
+              value: zoo1
+    ```
+  - Apply changes by `kubectl apply -f zookeeper-statefullset.yml`
 
-#### Expose Zookeeper service
+### Expose Zookeeper service
 
 - Save snippet below to `zookeeper-service.yml` file:
   ```yml
@@ -132,7 +131,7 @@ kubectl create ns kafka
   ```
 - Apply changes by `kubectl apply -f zookeeper-service.yml`
 
-#### Create Broker
+### Create Broker
 
 - Save snippet below to `broker-statefullset.yml` file:
   ```yml
@@ -183,7 +182,7 @@ kubectl create ns kafka
   ```
 - Apply changes by `kubectl apply -f broker-statefullset.yml`
 
-#### Expose Broker service
+### Expose Broker service
 
 - Save snippet below to `kafka-service.yml` file:
   ```yml
@@ -204,7 +203,7 @@ kubectl create ns kafka
   ```
 Apply changes by `kubectl apply -f kafka-service.yml`
 
-#### Try to send and receive messages
+### Try to send and receive messages
 - Forward Broker service to your local machine 
   ```shell
   kubectl port-forward service/broker -n kafka 9092:9092
@@ -220,35 +219,68 @@ Apply changes by `kubectl apply -f kafka-service.yml`
   ```shell
   kcat -b localhost:9092 -t test-topic -C
   ```
-##  Option B. Official Kafka Helm chart <a name="option-b"></a>
 
-#### Benefits and Cautions
+- When tests will finish, just remove namespace
+  ```shell
+  kubectl delete ns kafka
+  ```
 
-Most of the things that you usually need with Apache Kafka already
-present in Helm chart. There are a lot of variables that can help you
-to get exact configuration you need. Using Helm can simplify
-transition to GitOps for you.
+
+## Option B. Official Kafka Helm chart <a name="option-b"></a>
+
+In this example bitnami Apache Kafka helm-chart was used 
+https://github.com/bitnami/charts/tree/master/bitnami/kafka 
+
+### Benefits and Cautions
+
+Most of the things that you usually need to cofigure Apache Kafka 
+properly already exists in this Helm chart. Default configuration/behavour
+can be easilly changed by values override. By Helm you can simplify
+transition to GitOps for your company now or in the future.
 
 By the other hand entry level for maintaining this solution a bit
 bigger, because of templating mechanism complexity. Usually, it does
 not take much time to sort out with Helm templating mechanism.
 
-#### Setup by Helm
-- Add Helm chart repository
-  ```shell
-  helm repo add bitnami https://charts.bitnami.com/bitnami
-  ```
-- Override default variables as (if) you need
-  
+### Install Helm chart with your variables
+  - Add Helm chart repository
+      ```shell
+      helm repo add bitnami https://charts.bitnami.com/bitnami
+      ```
+  - Override default variables as (if) you need
+
+
+    ```shell
+    helm install kafka bitnami/kafka \
+    --create-namespace \
+    --set global.storageClass='csi-disk'
+    ```
+
   > More information about variables, that can be overrided you can find [here](https://github.com/bitnami/charts/tree/master/bitnami/kafka#parameters)
 
-- Install Helm chart with your variables
-  ```shell
-  helm install my-release bitnami/kafka
-  ```
+### Check that everything works (Optional)
+  - Run Kafka Client by 
+    ```shell
+    kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r84 --namespace kafka --command -- sleep infinity
+    ```
+  - Start consumer
+      ```shell
+      kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-consumer.sh --bootstrap-server kafka.kafka.svc.cluster.local:9092 --topic test --from-beginning
+      ```
+  - Open another terminal instance (window or tab)
+  - Start producer
+      ```shell
+      kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-producer.sh --broker-list kafka-0.kafka-headless.kafka.svc.cluster.local:9092 --topic test
+      ```
+  - Start produce messages line by line and check results in consumer 
+
+
 ## Option C. Strimzi Kafka Operator <a name="option-c"></a>
 
-#### Benefits and Cautions
+In this example bitnami Apache Kafka helm-chart was used 
+https://github.com/bitnami/charts/tree/master/bitnami/kafka 
+
+### Benefits and Cautions  
 
 Operators are quite smart in how they manage applications in Kubernetes.
 Usually, you need to define only high-level parameters like CPU, Memory,
@@ -261,14 +293,92 @@ potentially can bring problems. Engineers need to have additional
 knowledge. Besides Cloud Technologies, Kubernetes, Helm they need to
 know how this exact operator works.
 
-#### Applying Strimzi installation files
 
-#### Provision Apache Kafka cluster
+### Apply Strimzi installation files
+  - Create namespace
+    ```shell
+    kubectl create ns kafka
+    ```
+  - This command will create all needed CRD's inside your cluster
+    ```shell
+    kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+    ```
 
-#### Wait for pods starts
+  - You can check that strimzi-cluster-operator successfully started by
+    ```shell
+    kubectl logs deployment/strimzi-cluster-operator -n kafka -f
+    ```
 
-#### Try to send and receive messages
+### Provision Apache Kafka cluster
+- Save snippet below to `kafka-cluster.yml` file:
+  ```yml
+  apiVersion: kafka.strimzi.io/v1beta2
+  kind: Kafka
+  metadata:
+    name: my-cluster
+  spec:
+    kafka:
+      version: 2.8.0
+      replicas: 1
+      listeners:
+        - name: plain
+          port: 9092
+          type: internal
+          tls: false
+        - name: tls
+          port: 9093
+          type: internal
+          tls: true
+      config:
+        offsets.topic.replication.factor: 1
+        transaction.state.log.replication.factor: 1
+        transaction.state.log.min.isr: 1
+        log.message.format.version: "2.8"
+        inter.broker.protocol.version: "2.8"
+      storage:
+        type: ephemeral
+        volumes:
+        - id: 0
+          type: ephemeral
+          size: 100Gi
+          deleteClaim: false
+    zookeeper:
+      replicas: 1
+      storage:
+        type: ephemeral
+        size: 100Gi
+        deleteClaim: false
+    entityOperator:
+      topicOperator: {}
+      userOperator: {}
+  ```
+- Apply changes by `kubectl apply -f kafka-cluster.yml`
+- Wait for pods starts
+  ```shell
+  kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n my-kafka-project
+  ```
 
-##  Conclusion
+### Check that everything works (Optional)
+  - Start with forwarding broker port locally
+    ```shell
+    kubectl port-forward service/my-cluster-kafka-brokers -n kafka 9092:9092
+    ```
+  - Run Kafka Client
+    ```shell
+    kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r84 --namespace kafka --command -- sleep infinity
+    ```
+  - Start consumer
+    ```shell
+    kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-brokers.kafka.svc.cluster.local:9092 --topic test --from-beginning
+    ```  
+  - Open another terminal instance (window or tab)
+  - Start producer
+    ```shell
+    kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-producer.sh --broker-list my-cluster-kafka-brokers.kafka.svc.cluster.local:9092 --topic test
+    ```
+  - Start produce messages line by line and check results in consumer 
+
+
+## Conclusion
 
 Here must be some conclusion
