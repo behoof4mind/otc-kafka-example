@@ -1,8 +1,8 @@
 # OTC CCE Apache Kafka examples
 
-[Markdown](OTC-Kafka-example.md)
-[Docx](OTC-Kafka-example.docx)
-[PDF](OTC-Kafka-example.pdf)
+[Markdown](OTC-Kafka-example.md)  
+[Docx](OTC-Kafka-example.docx)  
+[PDF](OTC-Kafka-example.pdf)  
 
 ### How to change and export
 - Make some changes in .md files
