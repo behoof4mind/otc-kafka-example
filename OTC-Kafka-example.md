@@ -60,49 +60,53 @@ duplicate your code below.
 
 
 ### Create Zookeeper
-  - Create namespace
-    ```shell
-    kubectl create ns kafka
-    ```
-  - Save snippet below to `zookeeper-statefullset.yml` file:
-    ```yml
-    apiVersion: apps/v1
-    kind: StatefulSet
-    metadata:
-      name: zookeeper
-    spec:
-      selector:
-        matchLabels:
+
+- Create namespace
+  ```shell
+  kubectl create ns kafka
+  ```
+- Save snippet below to `zookeeper-statefullset.yml` file:  
+  ```yml
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: zookeeper
+  spec:
+    selector:
+      matchLabels:
+        app: zookeeper
+    serviceName: zookeeper
+    replicas: 1
+    template:
+      metadata:
+        labels:
           app: zookeeper
-      serviceName: zookeeper
-      replicas: 1
-      template:
-        metadata:
-          labels:
-            app: zookeeper
-        spec:
-          containers:
-          - name: zoo1
-            image: zookeeper
-            imagePullPolicy: IfNotPresent
-            resources:
-              requests:
-                cpu: 128m
-                memory: 500Mi
-              limits:
-                cpu: 128m
-                memory: 500Mi
-            ports:
-            - containerPort: 2181
-            env:
-            - name: ZK_SERVER_HEAP
-              value: "256"
-            - name: ZOOKEEPER_ID
-              value: "1"
-            - name: ZOOKEEPER_SERVER_1
-              value: zoo1
-    ```
-  - Apply changes by `kubectl apply -f zookeeper-statefullset.yml`
+      spec:
+        containers:
+        - name: zoo1
+          image: zookeeper
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 128m
+              memory: 500Mi
+            limits:
+              cpu: 128m
+              memory: 500Mi
+          ports:
+          - containerPort: 2181
+          env:
+          - name: ZK_SERVER_HEAP
+            value: "256"
+          - name: ZOOKEEPER_ID
+            value: "1"
+          - name: ZOOKEEPER_SERVER_1
+            value: zoo1
+  ```
+- Apply changes
+  ```shell
+  kubectl apply -f zookeeper-statefullset.yml
+  ```
 
 ### Expose Zookeeper service
 
@@ -128,7 +132,10 @@ duplicate your code below.
     selector:
       app: zookeeper
   ```
-- Apply changes by `kubectl apply -f zookeeper-service.yml`
+- Apply changes
+  ```shell
+  kubectl apply -f zookeeper-service.yml
+  ```
 
 ### Create Broker
 
@@ -179,7 +186,10 @@ duplicate your code below.
           - name: KAFKA_BROKER_ID
             value: "0"
   ```
-- Apply changes by `kubectl apply -f broker-statefullset.yml`
+- Apply changes
+  ```shell
+  kubectl apply -f broker-statefullset.yml
+  ```
 
 ### Expose Broker service
 
@@ -200,7 +210,10 @@ duplicate your code below.
       app: broker
     type: ClusterIP
   ```
-Apply changes by `kubectl apply -f kafka-service.yml`
+Apply changes
+  ```shell
+  kubectl apply -f kafka-service.yml
+  ```
 
 ### Try to send and receive messages
 - Forward Broker service to your local machine 
@@ -242,36 +255,36 @@ bigger, because of templating mechanism complexity. Usually, it does
 not take much time to sort out with Helm templating mechanism.
 
 ### Install Helm chart with your variables
-  - Add Helm chart repository
-      ```shell
-      helm repo add bitnami https://charts.bitnami.com/bitnami
-      ```
-  - Override default variables as (if) you need
+- Add Helm chart repository
+  ```shell
+  helm repo add bitnami https://charts.bitnami.com/bitnami
+  ```
+- Override default variables as (if) you need
 
 
-    ```shell
-    helm install kafka bitnami/kafka \
-    --create-namespace \
-    --set global.storageClass='csi-disk'
-    ```
+  ```shell
+  helm install kafka bitnami/kafka \
+  --create-namespace \
+  --set global.storageClass='csi-disk'
+  ```
 
-  > More information about variables, that can be overridden you can find [here](https://github.com/bitnami/charts/tree/master/bitnami/kafka#parameters)
+> More information about variables, that can be overridden you can find [here](https://github.com/bitnami/charts/tree/master/bitnami/kafka#parameters)
 
 ### Check that everything works (Optional)
-  - Run Kafka Client by 
-    ```shell
-    kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r84 --namespace kafka --command -- sleep infinity
-    ```
-  - Start consumer
-      ```shell
-      kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-consumer.sh --bootstrap-server kafka.kafka.svc.cluster.local:9092 --topic test --from-beginning
-      ```
-  - Open another terminal instance (window or tab)
-  - Start producer
-      ```shell
-      kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-producer.sh --broker-list kafka-0.kafka-headless.kafka.svc.cluster.local:9092 --topic test
-      ```
-  - Start produce messages line by line and check results in consumer 
+- Run Kafka Client
+  ```shell
+  kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r84 --namespace kafka --command -- sleep infinity
+  ```
+- Start consumer
+  ```shell
+  kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-consumer.sh --bootstrap-server kafka.kafka.svc.cluster.local:9092 --topic test --from-beginning
+  ```
+- Open another terminal instance (window or tab)
+- Start producer
+  ```shell
+  kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-producer.sh --broker-list kafka-0.kafka-headless.kafka.svc.cluster.local:9092 --topic test
+  ```
+- Start produce messages line by line and check results in consumer 
 
 
 ## Option C. Strimzi Kafka Operator <a name="option-c"></a>
@@ -294,19 +307,19 @@ know how this exact operator works.
 
 
 ### Apply Strimzi installation files
-  - Create namespace
-    ```shell
-    kubectl create ns kafka
-    ```
-  - This command will create all needed CRD's inside your cluster
-    ```shell
-    kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
-    ```
+- Create namespace
+  ```shell
+  kubectl create ns kafka
+  ```
+- This command will create all needed CRD's inside your cluster
+  ```shell
+  kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+  ```
 
-  - You can check that strimzi-cluster-operator successfully started by
-    ```shell
-    kubectl logs deployment/strimzi-cluster-operator -n kafka -f
-    ```
+- You can check that strimzi-cluster-operator successfully started by
+  ```shell
+  kubectl logs deployment/strimzi-cluster-operator -n kafka -f
+  ```
 
 ### Provision Apache Kafka cluster
 - Save snippet below to `kafka-cluster.yml` file:
@@ -358,24 +371,24 @@ know how this exact operator works.
   ```
 
 ### Check that everything works (Optional)
-  - Start with forwarding broker port locally
-    ```shell
-    kubectl port-forward service/my-cluster-kafka-brokers -n kafka 9092:9092
-    ```
-  - Run Kafka Client
-    ```shell
-    kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r84 --namespace kafka --command -- sleep infinity
-    ```
-  - Start consumer
-    ```shell
-    kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-brokers.kafka.svc.cluster.local:9092 --topic test --from-beginning
-    ```  
-  - Open another terminal instance (window or tab)
-  - Start producer
-    ```shell
-    kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-producer.sh --broker-list my-cluster-kafka-brokers.kafka.svc.cluster.local:9092 --topic test
-    ```
-  - Start produce messages line by line and check results in consumer 
+- Start with forwarding broker port locally
+  ```shell
+  kubectl port-forward service/my-cluster-kafka-brokers -n kafka 9092:9092
+  ```
+- Run Kafka Client
+  ```shell
+  kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r84 --namespace kafka --command -- sleep infinity
+  ```
+- Start consumer
+  ```shell
+  kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-brokers.kafka.svc.cluster.local:9092 --topic test --from-beginning
+  ```  
+- Open another terminal instance (window or tab)
+- Start producer
+  ```shell
+  kubectl exec --tty -i kafka-client --namespace kafka -- kafka-console-producer.sh --broker-list my-cluster-kafka-brokers.kafka.svc.cluster.local:9092 --topic test
+  ```
+- Start produce messages line by line and check results in consumer 
 
 
 ## Conclusion
