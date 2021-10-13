@@ -1,7 +1,7 @@
 ##  How to start with Apache Kafka
 
 [Description](#description)  
-[Requiremens](#requirements)  
+[Requirements](#requirements)  
 [Option A. Plain Kubernetes manifests](#option-a)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Create Zookeeper](#create-zookeeper)  
@@ -232,9 +232,9 @@ https://github.com/bitnami/charts/tree/master/bitnami/kafka
 
 ### Benefits and Cautions
 
-Most of the things that you usually need to cofigure Apache Kafka 
-properly already exists in this Helm chart. Default configuration/behavour
-can be easilly changed by values override. By Helm you can simplify
+Most of the things that you usually need to configure Apache Kafka 
+properly already exists in this Helm chart. Default configuration/behavior
+can be easily changed by overriding values. By Helm you can simplify
 transition to GitOps for your company now or in the future.
 
 By the other hand entry level for maintaining this solution a bit
@@ -255,7 +255,7 @@ not take much time to sort out with Helm templating mechanism.
     --set global.storageClass='csi-disk'
     ```
 
-  > More information about variables, that can be overrided you can find [here](https://github.com/bitnami/charts/tree/master/bitnami/kafka#parameters)
+  > More information about variables, that can be overridden you can find [here](https://github.com/bitnami/charts/tree/master/bitnami/kafka#parameters)
 
 ### Check that everything works (Optional)
   - Run Kafka Client by 
