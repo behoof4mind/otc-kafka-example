@@ -3,16 +3,16 @@
 [Table of Contents](#table-of-content)  
 [Description](#description)  
 [Requiremens](#requirements)  
-[Option A - Plain Kubernetes manifests](#abcd)  
+[Option A. Plain Kubernetes manifests](#option-a)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Create Zookeeper](#create-zookeeper)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Expose Zookeeper service](#expose-zookeeper-service)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Create Broker](#create-broker)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Expose Broker service](#expose-broker-service)  
-[Option B - Official Kafka Helm chart](#option-b--official-kafka-helm-chart)  
+[Option B. Official Kafka Helm chart](#option-b)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-1)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Setup by Helm](#setup-by-helm)  
-[Option C - Strimzi Kafka Operator](#option-c--strimzi-kafka-operator)  
+[Option C. Strimzi Kafka Operator](#option-c)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-2)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Applying Strimzi installation files](#applying-strimzi-installation-files)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Provision Apache Kafka cluster](#provision-apache-kafka-cluster)  
@@ -41,7 +41,7 @@ the [Requirements](#requirements) section below.
 -   Kubectl configured for your Kubernetes cluster context properly
 -   Helm package manager
 
-## Option A - Plain Kubernetes manifests  <a name="abcd"></a>
+## Option A. Plain Kubernetes manifests  <a name="option-a"></a>
 
 #### Benefits and Cautions
 
@@ -212,7 +212,7 @@ Apply changes by `kubectl apply -f kafka-service.yml`
   ```shell
   kcat -b localhost:9092 -t test-topic -C
   ```
-##  Option B. Official Kafka Helm chart
+##  Option B. Official Kafka Helm chart <aname="option-b"></a>
 
 #### Benefits and Cautions
 
@@ -238,7 +238,7 @@ not take much time to sort out with Helm templating mechanism.
   ```shell
   helm install my-release bitnami/kafka
   ```
-## Option C. Strimzi Kafka Operator
+## Option C. Strimzi Kafka Operator <a name="option-c"></a>
 
 #### Benefits and Cautions
 
