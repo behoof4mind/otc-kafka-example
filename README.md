@@ -12,3 +12,5 @@
       pandoc --pdf-engine=xelatex OTC-Kafka-example.md -o OTC-Kafka-example.pdf --toc
       ```
   
+### Contribution
+If you found any mistakes or have improvements/ideas, please let us know by opening Issue or Merge request.

@@ -29,6 +29,7 @@ need, depending on your use-case.
 
 All tools and their versions described in this article you can find in
 the [Requirements](#requirements) section below.
+Files mentioned here can be found here https://github.com/iits-consulting/otc-kafka-example
 
 > **Please keep in mind that we are not pretending to have production-ready
 > guide that you should follow up without worries. Production systems
@@ -39,13 +40,14 @@ the [Requirements](#requirements) section below.
 
 -   OTC CCE cluster
 -   Kubectl configured for your Kubernetes cluster context properly
--   Helm package manager
+-   Helm package manager (for options B and C)
+-   Kafkacat (optional)
 
 ## Option A. Plain Kubernetes manifests  <a name="option-a"></a>
 
 #### Benefits and Cautions
 
-This option should be used for testing purposes. No additional tools
+This option should be used for **testing** purposes. No additional tools
 and pre-configuration steps needed. You are using plain Kubernetes
 manifests with standard API objects. Configuration as transparent as
 possible.
@@ -55,6 +57,12 @@ Since there is no any packaging (like helm) you cannot use benefits of
 versioning and templating. If you need to apply these manifests in
 different environments with different configuration – you should
 duplicate your code below.
+
+#### Create Namespace
+
+```shell
+kubectl create ns kafka
+```
 
 #### Create Zookeeper
 
