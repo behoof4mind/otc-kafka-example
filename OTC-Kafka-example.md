@@ -380,4 +380,7 @@ know how this exact operator works.
 
 ## Conclusion
 
-Here must be some conclusion
+We described here 3 different options which can be used to start with Apache Kafka in OTC CCE solution. A lot of other options also available (using different helm-chart, write your own, use any other Kafka-Operator, using kustomization or ksonnet files).
+
+You need to keep in mind that all recommendations and best practices (as low-latency network and storage, high-availability, data protection and security) for Kafka on Kubernetes cluster should be followed as much as possible
+
