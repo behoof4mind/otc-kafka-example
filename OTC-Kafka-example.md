@@ -8,15 +8,16 @@
 &nbsp;&nbsp;&nbsp;&nbsp;[Expose Zookeeper service](#expose-zookeeper-service)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Create Broker](#create-broker)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Expose Broker service](#expose-broker-service)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-and-receive-messages)  
 [Option B. Official Kafka Helm chart](#option-b)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;[Setup by Helm](#setup-by-helm)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Install Helm chart with your variables](#install-helm-chart-with-your-variables)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Check that everything works (Optional)](#check-that-everything-works-optional)  
 [Option C. Strimzi Kafka Operator](#option-c)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-2)  
-&nbsp;&nbsp;&nbsp;&nbsp;[Applying Strimzi installation files](#applying-strimzi-installation-files)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Apply Strimzi installation files](#apply-strimzi-installation-files)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Provision Apache Kafka cluster](#provision-apache-kafka-cluster)  
-&nbsp;&nbsp;&nbsp;&nbsp;[Wait for pods starts](#wait-for-pods-starts)  
-&nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-and-receive-messages)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Check that it works (Optional)](#check-that-it-works-optional)  
 [Conclusion](#conclusion)  
 
 ###  Description
@@ -370,7 +371,7 @@ know how this exact operator works.
   kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n my-kafka-project
   ```
 
-### Check that everything works (Optional)
+### Check that it works (Optional)
 - Start with forwarding broker port locally
   ```shell
   kubectl port-forward service/my-cluster-kafka-brokers -n kafka 9092:9092
