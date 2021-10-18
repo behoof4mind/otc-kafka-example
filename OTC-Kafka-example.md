@@ -2,25 +2,24 @@
 
 [Introduction](#introduction)  
 [Requirements](#requirements)  
-[Deployment Options](#setup-with-helm-a-nameoption-ba)  
-&nbsp;&nbsp;&nbsp;&nbsp;[Bitnami Helm chart](#setup-with-helm-a-nameoption-ba)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-1)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Install Helm chart with your variables](#install-helm-chart-with-your-variables)  
+[Deployment Options](#setup-with-helm)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Bitnami Helm chart](#setup-with-helm)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Install Helm chart with your variables](#configuration)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Write a test message to a topic (Optional)](#write-a-test-message-to-a-topic-optional)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Kafka UI (Optional)](#setup-a-admin-ui-for-kafka-optional)  
-&nbsp;&nbsp;&nbsp;&nbsp;[Strimzi Kafka Operator](#setup-with-strimzi-kafka-operator-a-nameoption-ca)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions-2)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Strimzi Kafka Operator](#setup-with-strimzi-kafka-operator)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-strimzi)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Apply Strimzi installation files](#apply-strimzi-installation-files)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Provision Apache Kafka cluster](#provision-apache-kafka-cluster)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-and-receive-messages)  
-&nbsp;&nbsp;&nbsp;&nbsp;[Plain Kubernetes manifests](#setup-with-plain-kubernetes-manifests--a-nameoption-aa)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-and-cautions)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-strimzi)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Plain Kubernetes manifests](#setup-with-plain-kubernetes-manifests)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Benefits and Cautions](#benefits-plain)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Create Zookeeper](#create-zookeeper)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Expose Zookeeper service](#expose-zookeeper-service)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Create Broker](#create-broker)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Expose Broker service](#expose-broker-service)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-and-receive-messages)
-[Conclusion](#conclusion)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Try to send and receive messages](#try-to-send-plain)
+[Things to mention](#things-to-mention)  
 
 ###  Introduction
 
@@ -38,10 +37,10 @@ The first approach with Bitnami kafka helm chart is multiple times tested and us
 
 -   OTC CCE cluster
 -   Kubectl properly configured for your Kubernetes cluster
--   Helm package manager (for options A and B)
+-   Helm package manager
 -   Kafkacat (optional)
 
-## Setup with helm <a name="option-b"></a>
+## Setup with helm
 
 In this example bitnami Apache Kafka helm-chart was used 
 https://github.com/bitnami/charts/tree/master/bitnami/kafka 
@@ -163,12 +162,12 @@ After that akhq you can expose your service over ingress or just make a kubectl 
 
 Open the browser and access http://localhost:8080/akhq/ui/kafka/topic
 
-## Setup with Strimzi Kafka Operator <a name="option-c"></a>
+## Setup with Strimzi Kafka Operator
 
 In this example bitnami Apache Kafka helm-chart was used 
 https://github.com/bitnami/charts/tree/master/bitnami/kafka 
 
-### Benefits and Cautions  
+### Benefits and Cautions  <a name="benefits-strimzi"></a>
 
 Operators are quite smart in how they manage applications in Kubernetes.
 Usually, you need to define only high-level parameters like CPU, Memory,
@@ -246,11 +245,8 @@ know how this exact operator works.
   kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n my-kafka-project
   ```
 
-### Try to send and receive messages
-- Start with forwarding broker port locally
-  ```shell
-  kubectl port-forward service/my-cluster-kafka-brokers -n kafka 9092:9092
-  ```
+### Try to send and receive messages <a name="try-to-send-strimzi"></a>
+
 - Run Kafka Client
   ```shell
   kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.0-debian-10-r84 --namespace kafka --command -- sleep infinity
@@ -267,9 +263,9 @@ know how this exact operator works.
 - Start produce messages line by line and check results in consumer 
 
 
-## Setup with Plain Kubernetes manifests  <a name="option-a"></a>
+## Setup with Plain Kubernetes manifests
 
-### Benefits and Cautions
+### Benefits and Cautions <a name="benefits-plain"></a>
 
 We would not recommend this approach. You don’t have elasticity in terms of configuration.
 Since there is no any packaging (like helm) you cannot use benefits of
@@ -440,7 +436,7 @@ Apply changes
   kubectl apply -f kafka-service.yml
   ```
 
-### Try to send and receive messages
+### Try to send and receive messages <a name="try-to-send-plain"></a>
 - Forward Broker service to your local machine
   ```shell
   kubectl port-forward service/broker -n kafka 9092:9092
